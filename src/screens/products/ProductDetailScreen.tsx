@@ -98,7 +98,7 @@ export function ProductDetailScreen({ productId }: ProductDetailScreenProps) {
           <Image
             source={{ uri: images[activeImage] }}
             style={styles.mainImage}
-            contentFit="cover"
+            contentFit="contain"
             transition={250}
           />
 
@@ -340,8 +340,8 @@ const styles = StyleSheet.create({
   // Image gallery
   imageContainer: {
     width: '100%',
-    aspectRatio: 1,
-    maxHeight: 480,
+    aspectRatio: 4 / 5,
+    maxHeight: 600,
     position: 'relative',
     backgroundColor: '#111',
   },
