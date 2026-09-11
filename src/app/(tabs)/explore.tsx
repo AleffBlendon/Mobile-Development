@@ -42,7 +42,7 @@ export default function ExploreScreen() {
           Explore
         </Text>
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-          E-ShopMobile — moda premium com visual escuro. Esta aba explica o que já existe no app.
+          E-ShopMobile — moda premium.
         </Text>
 
         <View style={styles.cards}>
