@@ -6,12 +6,13 @@ import {
     TabTrigger,
     TabTriggerSlotProps,
 } from 'expo-router/ui';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
 
 import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { useAppSelector } from '@/hooks/use-app-selector';
 import { useLogout } from '@/hooks/use-logout';
 
 export default function AppTabs() {
@@ -48,6 +49,7 @@ export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps
 
 export function CustomTabList(props: TabListProps) {
   const logout = useLogout();
+  const isLoggingOut = useAppSelector((s) => s.auth.isLoggingOut);
 
   return (
     <View {...props} style={styles.tabListContainer}>
@@ -58,11 +60,18 @@ export function CustomTabList(props: TabListProps) {
 
         {props.children}
 
-        <Pressable onPress={logout} style={({ pressed }) => pressed && styles.pressed}>
+        <Pressable
+          onPress={logout}
+          disabled={isLoggingOut}
+          style={({ pressed }) => (pressed || isLoggingOut) && styles.pressed}>
           <ThemedView type="backgroundElement" style={styles.tabButtonView}>
-            <ThemedText type="small" themeColor="textSecondary">
-              Sair
-            </ThemedText>
+            {isLoggingOut ? (
+              <ActivityIndicator size="small" />
+            ) : (
+              <ThemedText type="small" themeColor="textSecondary">
+                Sair
+              </ThemedText>
+            )}
           </ThemedView>
         </Pressable>
       </ThemedView>

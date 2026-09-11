@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useCallback } from 'react';
 import {
+    ActivityIndicator,
     FlatList,
     Platform,
     Pressable,
@@ -8,7 +9,7 @@ import {
     Text,
     useWindowDimensions,
     View,
-    type ListRenderItem,
+    type ListRenderItem
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -25,6 +26,7 @@ import {
     Radius,
     Spacing,
 } from '@/constants/theme';
+import { useAppSelector } from '@/hooks/use-app-selector';
 import { useLogout } from '@/hooks/use-logout';
 import { useProducts } from '@/hooks/use-products';
 import { useTheme } from '@/hooks/use-theme';
@@ -34,6 +36,7 @@ export function ProductListScreen() {
   const theme = useTheme();
   const router = useRouter();
   const logout = useLogout();
+  const isLoggingOut = useAppSelector((s) => s.auth.isLoggingOut);
   const { width } = useWindowDimensions();
   const numColumns = width >= 768 ? 3 : 2;
   const {
@@ -114,6 +117,7 @@ export function ProductListScreen() {
         </Text>
         <Pressable
           onPress={logout}
+          disabled={isLoggingOut}
           hitSlop={8}
           style={({ pressed }) => [
             styles.logoutButton,
@@ -121,13 +125,17 @@ export function ProductListScreen() {
               borderColor: theme.border,
               backgroundColor: theme.backgroundElement,
             },
-            pressed && styles.logoutButtonPressed,
+            (pressed || isLoggingOut) && styles.logoutButtonPressed,
           ]}
           accessibilityRole="button"
           accessibilityLabel="Sair da conta">
-          <Text style={[styles.logoutLabel, { color: theme.textSecondary }]}>
-            Sair
-          </Text>
+          {isLoggingOut ? (
+            <ActivityIndicator size="small" color={theme.textSecondary} />
+          ) : (
+            <Text style={[styles.logoutLabel, { color: theme.textSecondary }]}>
+              Sair
+            </Text>
+          )}
         </Pressable>
       </View>
 
