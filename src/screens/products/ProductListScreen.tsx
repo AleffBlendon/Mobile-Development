@@ -55,6 +55,24 @@ export function ProductListScreen() {
     [router],
   );
 
+  /**
+   * Sticky filter bar — rendered as the first item of the FlatList
+   * so it sticks to the top when scrolling (via stickyHeaderIndices={[0]}).
+   */
+  const ListFilters = useCallback(
+    () => (
+      <View style={[styles.filtersContainer, { backgroundColor: theme.background }]}>
+        <GenderTabBar active={activeGender} onSelect={selectGender} />
+        <CategoryPicker
+          categories={categories}
+          active={activeCategory}
+          onSelect={selectCategory}
+        />
+      </View>
+    ),
+    [activeGender, activeCategory, categories, selectGender, selectCategory, theme.background],
+  );
+
   const renderItem: ListRenderItem<Product> = useCallback(
     ({ item, index }) => (
       <View
@@ -69,7 +87,8 @@ export function ProductListScreen() {
   );
 
   const renderEmpty = () => {
-    if (loading) return null;
+    if (loading) return <LoadingIndicator message="Carregando produtos..." fullScreen />;
+    if (error) return <ErrorMessage message={error} onRetry={retry} style={styles.errorMessage} />;
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyIcon}>🛍</Text>
@@ -85,7 +104,7 @@ export function ProductListScreen() {
       style={[styles.safeArea, { backgroundColor: theme.background }]}
       edges={['top']}>
 
-      {/* ── Header ── */}
+      {/* ── Header (always visible, above the scroll) ── */}
       <View style={styles.header}>
         <Text
           style={[styles.headerTitle, { color: theme.text }]}
@@ -112,44 +131,26 @@ export function ProductListScreen() {
         </Pressable>
       </View>
 
-      {/* ── Gender tabs ── */}
-      <GenderTabBar active={activeGender} onSelect={selectGender} />
-
-      {/* ── Category chips ── */}
-      <CategoryPicker
-        categories={categories}
-        active={activeCategory}
-        onSelect={selectCategory}
+      {/* ── Product list — filters stick to top via stickyHeaderIndices ── */}
+      <FlatList
+        data={loading || error ? [] : products}
+        key={numColumns}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={renderItem}
+        numColumns={numColumns}
+        ListHeaderComponent={ListFilters}
+        stickyHeaderIndices={[0]}
+        ListEmptyComponent={renderEmpty}
+        contentContainerStyle={[
+          styles.listContent,
+          (loading || error || products.length === 0) && styles.listContentEmpty,
+          { paddingBottom: BottomTabInset + Spacing.four },
+        ]}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={6}
+        windowSize={7}
+        removeClippedSubviews={Platform.OS === 'android'}
       />
-
-      {/* ── Content ── */}
-      {error ? (
-        <ErrorMessage
-          message={error}
-          onRetry={retry}
-          style={styles.errorMessage}
-        />
-      ) : loading ? (
-        <LoadingIndicator message="Carregando produtos..." fullScreen />
-      ) : (
-        <FlatList
-          data={products}
-          key={numColumns}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={renderItem}
-          numColumns={numColumns}
-          ListEmptyComponent={renderEmpty}
-          contentContainerStyle={[
-            styles.listContent,
-            products.length === 0 && styles.listContentEmpty,
-            { paddingBottom: BottomTabInset + Spacing.four },
-          ]}
-          showsVerticalScrollIndicator={false}
-          initialNumToRender={6}
-          windowSize={7}
-          removeClippedSubviews={Platform.OS === 'android'}
-        />
-      )}
     </SafeAreaView>
   );
 }
@@ -190,6 +191,10 @@ const styles = StyleSheet.create({
   logoutLabel: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
+  },
+  filtersContainer: {
+    // background needed so the sticky header covers content scrolling beneath it
+    paddingBottom: Spacing.one,
   },
   listContent: {
     paddingHorizontal: Spacing.two,

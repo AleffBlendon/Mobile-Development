@@ -19,11 +19,17 @@ export type CategorySlug =
   | 'mens-shirts'
   | 'mens-shoes'
   | 'mens-watches'
+  | 'fragrances'
+  | 'sunglasses'
+  | 'sports-accessories'
   | 'womens-bags'
   | 'womens-dresses'
   | 'womens-jewellery'
   | 'womens-shoes'
-  | 'womens-watches';
+  | 'womens-watches'
+  | 'tops'
+  | 'skin-care'
+  | 'beauty';
 
 export type GenderTab = 'mens' | 'womens';
 
@@ -56,6 +62,9 @@ export const MENS_CATEGORIES: CategorySlug[] = [
   'mens-shirts',
   'mens-shoes',
   'mens-watches',
+  'fragrances',
+  'sunglasses',
+  'sports-accessories',
 ];
 
 export const WOMENS_CATEGORIES: CategorySlug[] = [
@@ -64,17 +73,26 @@ export const WOMENS_CATEGORIES: CategorySlug[] = [
   'womens-jewellery',
   'womens-shoes',
   'womens-watches',
+  'tops',
+  'skin-care',
+  'beauty',
 ];
 
 export const CATEGORY_LABELS: Record<CategorySlug, string> = {
   'mens-shirts': 'Camisas',
   'mens-shoes': 'Sapatos',
   'mens-watches': 'Relógios',
+  'fragrances': 'Perfumes',
+  'sunglasses': 'Óculos',
+  'sports-accessories': 'Esportes',
   'womens-bags': 'Bolsas',
   'womens-dresses': 'Vestidos',
   'womens-jewellery': 'Joias',
   'womens-shoes': 'Calçados',
   'womens-watches': 'Relógios',
+  'tops': 'Blusas',
+  'skin-care': 'Skincare',
+  'beauty': 'Maquiagem',
 };
 
 // ---------------------------------------------------------------------------
