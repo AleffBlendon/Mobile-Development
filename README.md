@@ -1,56 +1,179 @@
-# Welcome to your Expo app 👋
+# E-ShopMobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Sobre o projeto
 
-## Get started
+E-ShopMobile é um aplicativo mobile de e-commerce desenvolvido como projeto acadêmico para a disciplina de **Mobile Development**. O aplicativo permite ao usuário fazer login, navegar por categorias de produtos masculinos e femininos, visualizar detalhes de cada produto e encerrar a sessão. Os dados são consumidos em tempo real da API pública DummyJSON.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## Funcionalidades
 
-2. Start the app
+- **Login com validação** — formulário com regras de validação antes de autenticar
+- **Armazenamento temporário da sessão** — estado de autenticação mantido no Redux durante a sessão
+- **Listagem de produtos** — grade de produtos com suporte a múltiplas colunas (responsivo)
+- **Categorias masculinas e femininas** — alternância entre abas Masculino/Feminino com chips de categoria por aba
+- **Consumo da API DummyJSON** — dados buscados em tempo real com cache local de 5 minutos
+- **Tela de detalhes** — galeria de imagens, informações de preço, desconto e descrição do produto
+- **Navegação entre telas** — roteamento via Expo Router com proteção de rotas autenticadas
+- **Logout** — encerra a sessão e redireciona para o login, limpando o estado do Redux
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## Tecnologias
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| Tecnologia | Versão | Uso |
+|---|---|---|
+| [React Native](https://reactnative.dev) | 0.86.3 | Base do aplicativo mobile |
+| [Expo](https://expo.dev) | ~57.0.22 | Plataforma e toolchain |
+| [Expo Router](https://docs.expo.dev/router/introduction/) | ~57.0.21 | Roteamento baseado em arquivos |
+| [Redux Toolkit](https://redux-toolkit.js.org) | ^2.12.0 | Gerenciamento de estado global |
+| [React Redux](https://react-redux.js.org) | ^9.3.0 | Integração do Redux com React |
+| [Axios](https://axios-http.com) | ^1.20.0 | Requisições HTTP |
+| [TypeScript](https://www.typescriptlang.org) | ~6.0.3 | Tipagem estática |
+| [expo-image](https://docs.expo.dev/versions/latest/sdk/image/) | ~57.0.5 | Renderização otimizada de imagens |
+| [react-native-safe-area-context](https://docs.expo.dev/versions/latest/sdk/safe-area-context/) | ~5.7.0 | Respeito às áreas seguras do dispositivo |
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## API utilizada
 
-When you're ready, run:
+**DummyJSON** — [`https://dummyjson.com`](https://dummyjson.com)
 
-```bash
-npm run reset-project
+API pública e gratuita que fornece dados fictícios de produtos para fins de desenvolvimento e testes.
+
+### Endpoints utilizados
+
+| Endpoint | Descrição |
+|---|---|
+| `GET /products/category/{slug}` | Retorna todos os produtos de uma categoria específica |
+| `GET /products/{id}` | Retorna os dados completos de um único produto pelo ID |
+
+### Categorias consumidas
+
+**Masculino:** `mens-shirts`, `mens-shoes`, `mens-watches`, `fragrances`, `sunglasses`, `sports-accessories`
+
+**Feminino:** `womens-bags`, `womens-dresses`, `womens-jewellery`, `womens-shoes`, `womens-watches`, `tops`, `skin-care`, `beauty`
+
+---
+
+## Estrutura do projeto
+
+```
+Mobile-Development/
+├── assets/
+│   └── images/              # Ícones e imagens estáticas
+├── src/
+│   ├── app/                 # Rotas (Expo Router — file-based routing)
+│   │   ├── _layout.tsx      # Layout raiz com Provider Redux e guard de autenticação
+│   │   ├── index.tsx        # Redirect inicial (autenticado → tabs, anônimo → login)
+│   │   ├── login.tsx        # Rota de login
+│   │   ├── (tabs)/          # Grupo de abas autenticadas
+│   │   │   ├── _layout.tsx  # Layout das abas
+│   │   │   ├── index.tsx    # Aba principal — lista de produtos
+│   │   │   └── explore.tsx  # Aba de exploração
+│   │   └── product/
+│   │       └── [id].tsx     # Rota dinâmica de detalhe do produto
+│   ├── components/
+│   │   ├── products/        # Componentes da listagem
+│   │   │   ├── CategoryPicker.tsx   # Chips horizontais de categoria
+│   │   │   ├── GenderTabBar.tsx     # Tabs Masculino/Feminino
+│   │   │   └── ProductCard.tsx      # Card individual de produto
+│   │   ├── ui/              # Componentes reutilizáveis
+│   │   │   ├── Button.tsx
+│   │   │   ├── Card.tsx
+│   │   │   ├── ErrorMessage.tsx
+│   │   │   ├── Input.tsx
+│   │   │   └── LoadingIndicator.tsx
+│   │   ├── app-tabs.tsx     # Navegação por abas (nativo)
+│   │   └── app-tabs.web.tsx # Navegação por abas (web)
+│   ├── constants/
+│   │   └── theme.ts         # Cores, espaçamentos e tipografia
+│   ├── hooks/
+│   │   ├── use-logout.ts        # Hook de logout com limpeza do Redux
+│   │   ├── use-product-detail.ts # Hook para buscar detalhe do produto
+│   │   ├── use-products.ts      # Hook principal de listagem e cache
+│   │   ├── use-theme.ts         # Hook de acesso ao tema atual
+│   │   ├── use-app-dispatch.ts  # Hook tipado do Redux dispatch
+│   │   └── use-app-selector.ts  # Hook tipado do Redux selector
+│   ├── screens/
+│   │   ├── login/
+│   │   │   ├── LoginScreen.tsx       # Tela de login
+│   │   │   ├── login.service.ts      # Lógica de autenticação
+│   │   │   └── login.validation.ts   # Regras de validação do formulário
+│   │   └── products/
+│   │       ├── ProductListScreen.tsx   # Tela de listagem de produtos
+│   │       └── ProductDetailScreen.tsx # Tela de detalhe do produto
+│   ├── services/
+│   │   ├── api.ts                # Instância centralizada do Axios
+│   │   └── products.service.ts   # Funções de acesso à API de produtos
+│   ├── store/
+│   │   ├── index.ts              # Configuração do store Redux
+│   │   └── slices/
+│   │       ├── authSlice.ts      # Estado de autenticação
+│   │       └── productsSlice.ts  # Estado de produtos, categorias e cache
+│   └── utils/
+│       └── price.ts              # Utilitários de formatação e cálculo de preço
+├── app.json                 # Configuração do Expo
+└── package.json
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+## Como executar
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### Pré-requisitos
 
-## Learn more
+- [Node.js](https://nodejs.org) instalado
+- [Expo Go](https://expo.dev/go) no dispositivo (para testar em celular) ou emulador configurado
 
-To learn more about developing your project with Expo, look at the following resources:
+### Instalação e execução
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+# 1. Instalar as dependências
+npm install
 
-## Join the community
+# 2. Iniciar o servidor de desenvolvimento
+npx expo start
+```
 
-Join our community of developers creating universal apps.
+Após iniciar, o terminal exibirá um QR code. Escaneie com o aplicativo **Expo Go** (Android/iOS) para abrir no dispositivo, ou pressione:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- `w` — abrir no navegador (web)
+- `a` — abrir no emulador Android
+- `i` — abrir no simulador iOS
+
+---
+
+## Fluxo do aplicativo
+
+```
+Login → Lista de Produtos → Detalhe do Produto → (voltar) → Lista de Produtos
+                                                                      ↓
+                                                                   Logout
+                                                                      ↓
+                                                                    Login
+```
+
+1. **Login** — usuário insere credenciais, que são validadas antes do envio
+2. **Lista de Produtos** — exibe produtos da categoria ativa com filtros por gênero e categoria
+3. **Detalhe do Produto** — galeria de imagens, preço com desconto e informações do produto
+4. **Logout** — limpa o estado da sessão e retorna à tela de login
+
+---
+
+## Screenshots
+
+> _Adicione os prints reais do aplicativo abaixo._
+
+| Tela | Screenshot |
+|---|---|
+| Login | _(adicionar print)_ |
+| Lista de Produtos — Masculino | _(adicionar print)_ |
+| Lista de Produtos — Feminino | _(adicionar print)_ |
+| Detalhe do Produto | _(adicionar print)_ |
+
+---
+
+## Observações
+
+Este projeto foi desenvolvido exclusivamente para fins **acadêmicos**, como parte da disciplina de Mobile Development. Os dados exibidos são fictícios e fornecidos pela API pública DummyJSON. Nenhuma transação real é realizada.

@@ -84,7 +84,7 @@ export function LoginScreen() {
               <Text style={styles.logoMarkText}>S</Text>
             </View>
             <Text style={[styles.brandName, { color: theme.text }]} accessibilityRole="header">
-              ShopDark
+              E-ShopMobile
             </Text>
             <Text style={[styles.brandTagline, { color: theme.textSecondary }]}>
               Moda premium ao seu alcance
