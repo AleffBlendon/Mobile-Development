@@ -165,12 +165,12 @@ Login → Lista de Produtos → Detalhe do Produto → (voltar) → Lista de Pro
 
 > _Adicione os prints reais do aplicativo abaixo._
 
-| Tela | Screenshot |
+| Tela |
 |---|---|
-| Login | _(adicionar print)_ |
-| Lista de Produtos — Masculino | _(adicionar print)_ |
-| Lista de Produtos — Feminino | _(adicionar print)_ |
-| Detalhe do Produto | _(adicionar print)_ |
+| Login |
+| Lista de Produtos — Masculino |
+| Lista de Produtos — Feminino |
+| Detalhe do Produto |
 
 ---
 
