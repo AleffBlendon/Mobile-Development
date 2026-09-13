@@ -161,19 +161,6 @@ Login → Lista de Produtos → Detalhe do Produto → (voltar) → Lista de Pro
 
 ---
 
-## Screenshots
-
-> _Adicione os prints reais do aplicativo abaixo._
-
-| Tela |
-|---|---|
-| Login |
-| Lista de Produtos — Masculino |
-| Lista de Produtos — Feminino |
-| Detalhe do Produto |
-
----
-
 ## Observações
 
 Este projeto foi desenvolvido exclusivamente para fins **acadêmicos**, como parte da disciplina de Mobile Development. Os dados exibidos são fictícios e fornecidos pela API pública DummyJSON. Nenhuma transação real é realizada.
